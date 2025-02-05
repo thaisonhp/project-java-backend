@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.javaweb.model.BuildingDTO;
+import com.javaweb.repository.BuildingRepository;
+import com.javaweb.repository.entity.BuildingEntity;
 import com.javaweb.service.BuildingService;
 
 //@Controller
@@ -29,23 +31,32 @@ public class BuildingAPI {
 	
 	@Autowired
 	private BuildingService buildingService ; 
+	
+	@Autowired
+	private BuildingRepository buildingRepository; 
+	
 	@GetMapping(value="/api/building/")
-	public List<BuildingDTO> getBuilding(@RequestParam(name = "name", required = false) String name,
-										@RequestParam(name = "districtid", required = false) Long districtid) {
-		List<BuildingDTO> result = buildingService.findAll(name,districtid);
+	public List<BuildingDTO> getBuilding(@RequestParam Map<String,Object> params,
+										@RequestParam(name="typeCode", required = false) List<String> typeCode ) {
+		List<BuildingDTO> result = buildingService.findAll(params,typeCode);
 	    return result ;
 	}
 	
-	// du lieu khi gui API la nhieu gia tri thi dung List de hung  
-	@GetMapping(value="/api/building/typeCode")
-	public List<BuildingDTO> getBuilding(@RequestParam(name = "typeCode", required = false) List<String> typeCode) {
-		List<BuildingDTO> result = buildingService.findByTypeCode(typeCode);
-		
-	    return result ;
+	// du lieu khi gui API la nhieu gia tri thi dung List de hung 
+	
+	@GetMapping(value="/api/building/byName")
+	public List<BuildingDTO> getBuildingByName(@RequestParam(name = "name", required = false) String name) {
+		List<BuildingDTO> buildings = buildingService.findByName(name);
+	    return buildings ;
+	}
+	@GetMapping(value="/api/building/byFloorArea")
+	public List<BuildingDTO> getBuildingByTypeCode(@RequestParam(name = "floorArea", required = false) List<String> floorArea) {
+		List<BuildingDTO> buildings = buildingService.findByTypeCode(floorArea);
+	    return buildings ;
 	}
 	
 	@RequestMapping(value = "/api/building2/",method = RequestMethod.POST)
-    public void getBuilding2(@RequestBody Map<String,String> params) {
+    public void getBuilding2(@RequestBody Map<String,Object> params) {
         System.out.println(params);
     }
 	
